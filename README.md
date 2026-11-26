@@ -1,3 +1,5 @@
+<div align="center">
+
 # AI Finance & Expense Intelligence Agent
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
@@ -7,6 +9,8 @@
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector_DB-555555)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white)
 ![Tesseract](https://img.shields.io/badge/Tesseract-OCR-4B8BBE)
+
+</div>
 
 An intelligent financial assistant that analyzes **real** expenses, invoices, budgets, and transactions, with no mock or demo data baked in. Upload your own scanned invoices and receipts and/or CSV bank exports, and the platform runs the full analysis pipeline for you:
 
@@ -152,3 +156,4 @@ To add more tools (for example, a vendor-lookup tool or a monthly-comparison too
 - **Database:** Swap SQLite for Postgres by changing `DB_PATH` / the engine URL in `database.py`. This is a drop-in change if you want a production-grade setup.
 - **OCR accuracy:** Field extraction in `ocr_processor.py` is regex/heuristic-based. If you process invoices from a small set of known vendors, tailoring the regex patterns to their specific layouts will improve accuracy.
 - **Risk scoring:** The risk score formula in `report_generator.py` is intentionally simple (`60% anomaly ratio + 40% over-budget ratio`). Tune the weights once you have enough real historical data to calibrate against.
+- **Report content:** Extend `report_generator.py` to add new sections to the markdown report, such as a month-over-month spend comparison or a vendor-level breakdown.
