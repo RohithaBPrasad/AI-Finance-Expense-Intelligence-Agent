@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Finance & Expense Intelligence Agent</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◆</span>
+      <div>
+        <h1>AI Finance &amp; Expense Intelligence Agent</h1>
+        <p>Document processing → Transaction analysis → Anomaly detection → Budget analysis → Report</p>
+      </div>
+    </div>
+    <div class="ollama-status" id="ollamaStatus">checking local LLM…</div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="upload">Upload Data</button>
+    <button class="tab-btn" data-tab="transactions">Transactions</button>
+    <button class="tab-btn" data-tab="budgets">Budgets</button>
+    <button class="tab-btn" data-tab="assistant">AI Assistant</button>
+    <button class="tab-btn" data-tab="report">Report</button>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <section class="tab-panel active" id="tab-dashboard">
+    <div class="cards" id="summaryCards"></div>
+    <div class="charts-grid">
+      <div class="panel">
+        <h3>Spend by Category</h3>
+        <canvas id="categoryChart"></canvas>
+      </div>
+      <div class="panel">
+        <h3>Monthly Trend</h3>
+        <canvas id="trendChart"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Flagged Anomalies</h3>
+      <div id="anomalyList" class="list"></div>
+    </div>
+  </section>
+
+  <!-- UPLOAD -->
+  <section class="tab-panel" id="tab-upload">
+    <div class="panel">
+      <h3>Upload Invoice / Receipt (image or PDF)</h3>
+      <p class="muted">Runs OCR + field extraction on the real document, then auto-categorizes it.</p>
+      <input type="file" id="docFileInput" accept=".png,.jpg,.jpeg,.tiff,.bmp,.pdf">
+      <button id="docUploadBtn">Process Document</button>
+      <div id="docUploadResult" class="result-box"></div>
+    </div>
+    <div class="panel">
+      <h3>Import Transactions (CSV — bank / expense export)</h3>
+      <p class="muted">Column names are auto-detected (date, amount, vendor/merchant, description).</p>
+      <input type="file" id="csvFileInput" accept=".csv">
+      <button id="csvUploadBtn">Import CSV</button>
+      <div id="csvUploadResult" class="result-box"></div>
+    </div>
+    <div class="panel">
+      <h3>Add Transaction Manually</h3>
+      <div class="form-grid">
+        <input id="manVendor" placeholder="Vendor">
+        <input id="manAmount" type="number" step="0.01" placeholder="Amount">
+        <input id="manDesc" placeholder="Description">
+        <input id="manDate" type="date">
+      </div>
+      <button id="manAddBtn">Add Transaction</button>
+      <div id="manResult" class="result-box"></div>
+    </div>
+  </section>
+
+  <!-- TRANSACTIONS -->
+  <section class="tab-panel" id="tab-transactions">
+    <div class="panel">
+      <div class="row-between">
+        <h3>All Transactions</h3>
+        <div>
+          <label><input type="checkbox" id="anomalyOnlyToggle"> anomalies only</label>
+          <button id="refreshTxnsBtn">Refresh</button>
+          <button id="runDetectBtn">Run Anomaly Detection</button>
+        </div>
+      </div>
+      <table class="txn-table">
+        <thead><tr><th>Date</th><th>Vendor</th><th>Category</th><th>Amount</th><th>Source</th><th>Anomaly</th><th></th></tr></thead>
+        <tbody id="txnTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- BUDGETS -->
+  <section class="tab-panel" id="tab-budgets">
+    <div class="panel">
+      <h3>Set Monthly Budget</h3>
+      <div class="form-grid">
+        <input id="budgetCategory" placeholder="Category (e.g. Travel)">
+        <input id="budgetLimit" type="number" step="0.01" placeholder="Monthly limit">
+      </div>
+      <button id="setBudgetBtn">Save Budget</button>
+    </div>
+    <div class="panel">
+      <h3>Budget vs Actual (this month)</h3>
+      <div id="budgetList" class="list"></div>
+    </div>
+  </section>
+
+  <!-- ASSISTANT -->
+  <section class="tab-panel" id="tab-assistant">
+    <div class="panel chat-panel">
+      <h3>Ask the Finance Agent</h3>
+      <p class="muted">Answers are grounded in your real transaction data (RAG) and can call SQL / anomaly / budget tools. Requires Ollama running locally.</p>
+      <div id="chatLog" class="chat-log"></div>
+      <div class="chat-input-row">
+        <input id="chatInput" placeholder="e.g. What's unusual about my spending this month?">
+        <button id="chatSendBtn">Ask</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPORT -->
+  <section class="tab-panel" id="tab-report">
+    <div class="panel">
+      <div class="row-between">
+        <h3>Automated Financial Analysis Report</h3>
+        <div>
+          <button id="genReportBtn">Generate Report</button>
+          <button id="downloadReportBtn">Download Markdown</button>
+        </div>
+      </div>
+      <div id="reportOutput" class="report-output"></div>
+    </div>
+  </section>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
